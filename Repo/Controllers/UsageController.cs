@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Repo.Dto.UsageDto;
 using Repo.Interfaces;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -12,46 +14,71 @@ namespace Repo.Controllers
     [Route("api/Usage")]
     public class UsageController : Controller
     {
-        private readonly IUsageRepository _usage;
+        private readonly IUsageRepository _repository;
+        private readonly IMapper _mapper;
 
-        public UsageController(IUsageRepository usage)
+        public UsageController(IUsageRepository usage, IMapper mapper)
         {
-            _usage = usage;
+            _repository = usage;
+            _mapper = mapper;
         }
 
         // GET: api/<controller>
-        [HttpGet]
-        public IActionResult Get()
+        [HttpGet("GetAll")]
+        public IActionResult GetAll()
         {
-            return Ok(_usage.Get().ToList());
-        }
+            var data = _repository.Get();
 
-        // GET api/<controller>/5
-        [HttpGet("GetById/{personId}")]
-        public IActionResult GetById(int personId)
-        {
-            return Ok(_usage.GetById(personId));
-        }
+            var otp = _mapper.Map<IEnumerable<UsageDtoGet>>(data);
 
+            return Ok(otp);
+        }
+        
+        //// GET api/<controller>/5
+        //[HttpGet("GetById/{personId}")]
+        //public IActionResult GetById(int personId)
+        //{
+        //    var data = _repository.GetById(personId);
+
+        //    var otp = _mapper.Map<UsageDtoGet>(data);
+
+        //    return Ok(otp);
+        //}
+        
         // GET api/values/5
         [HttpGet("AllByDevice/{deviceId}")]
         public IActionResult AllByDevice(int deviceId)
         {
-            return Ok(_usage.AllByDevice(deviceId));
-        }
+            var data = _repository.AllByDevice(deviceId);
 
+            var otp = _mapper.Map<IEnumerable<UsageDtoGet>>(data);
+
+            return Ok(otp);
+        }
+        
         // GET api/values/5
         [HttpGet("AllByPerson/{personId}")]
         public IActionResult AllByPerson(int personId)
         {
-            return Ok(_usage.AllByPerson(personId));
+            var data = _repository.AllByPerson(personId);
+
+
+            var otp = _mapper.Map<IEnumerable<UsageAllByPersonDtoGet>>(data);
+
+            
+
+            return Ok(otp);
         }
 
         // GET api/values/5
         [HttpGet("TimeUsedByPerson/{personId}")]
         public IActionResult TimeUsedByPerson(int personId)
         {
-            return Ok(_usage.TimeUsedByPerson(personId));
+            var data = _repository.TimeUsedByPerson(personId);
+
+            var otp = _mapper.Map<IEnumerable<TimeUsedByPersonDtoGet>>(data);
+
+            return Ok(otp);
         }
     }
 }

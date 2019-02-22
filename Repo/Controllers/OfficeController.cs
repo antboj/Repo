@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Repo.Dto.OfficeDto;
 using Repo.Interfaces;
 using Repo.Models;
 
@@ -11,17 +13,19 @@ using Repo.Models;
 namespace Repo.Controllers
 {
     [Route("api/Office")]
-    public class OfficeController : Controller
+    public class OfficeController : BaseController<Office, OfficeDtoGet, OfficeDtoPost, OfficeDtoPut>
     {
-        private readonly IOffice _office;
+        private readonly IOffice _repository;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IMapper _mapper;
 
-        public OfficeController(IOffice office, IUnitOfWork unitOfWork)
+        public OfficeController(IOffice repository, IUnitOfWork unitOfWork, IMapper mapper) : base(repository, unitOfWork, mapper)
         {
-            _office = office;
+            _repository = repository;
             _unitOfWork = unitOfWork;
+            _mapper = mapper;
         }
-
+        /*
         // GET: api/<controller>
         [HttpGet]
         public IActionResult Get()
@@ -37,15 +41,19 @@ namespace Repo.Controllers
             var foundOffice = _office.GetById(id);
             return Ok(foundOffice);
         }
-
+        */
         // GET api/values/5
         [HttpGet("GetByOffice/{officeName}")]
         public IActionResult GetByOffice(string officeName)
         {
-            return Ok(_office.GetByOffice(officeName));
-           
-        }
+            var data = _repository.GetByOffice(officeName);
 
+            var otp = _mapper.Map<IEnumerable<GetByOfficeDto>>(data);
+
+            return Ok(otp);
+
+        }
+        /*
         // POST api/<controller>
         [HttpPost]
         public IActionResult Post([FromBody] Office entity)
@@ -74,5 +82,6 @@ namespace Repo.Controllers
             _unitOfWork.Save();
             return Ok();
         }
+        */
     }
 }

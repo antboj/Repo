@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Repo.Dto.UsageDto;
 using Repo.Interfaces;
 using Repo.Models;
 
@@ -14,28 +15,18 @@ namespace Repo.Classes
 
         public UsageRepository(RepoContext context) : base(context)
         {
+            _context = context;
         }
 
         public IQueryable AllByDevice(int id)
         {
-            return _context.Usages.Where(d => d.DeviceId == id).Select(x => new
-            {
-                Name = x.Person.FirstName + " " + x.Person.LastName,
-                Device = x.Device.Name,
-                UsedFrom = x.UsedFrom,
-                UsedTo = x.UsedTo
-            });
+            return _context.Usages.Where(x => x.DeviceId == id).Include(p => p.Person).Include(d => d.Device);
         }
 
         public IQueryable AllByPerson(int id)
         {
-            return _context.Usages.Where(d => d.PersonId == id).Select(x => new
-            {
-                Name = x.Person.FirstName + " " + x.Person.LastName,
-                Device = x.Device.Name,
-                UsedFrom = x.UsedFrom,
-                UsedTo = x.UsedTo
-            });
+            return _context.Usages.Where(d => d.PersonId == id).Include(p => p.Person).Include(d => d.Device).GroupBy(d => d.Device.Name).Select(x =>
+                 new { Device = x.Key, Usages = x.Select(y => new { UsedFrom = y.UsedFrom, UsedTo = y.UsedTo }).OrderBy(d => d.UsedFrom) });
         }
 
         public IQueryable TimeUsedByPerson(int id)
@@ -46,6 +37,16 @@ namespace Repo.Classes
                     Device = y.Key,
                     TimeUsed = new TimeSpan(y.Sum(u => (u.UsedTo.Value != null ? u.UsedTo.Value.Ticks : DateTime.Now.Ticks) - u.UsedFrom.Ticks)).ToString(@"dd\.hh\:mm\:ss")
                 });
+        }
+
+        public override IEnumerable<Usage> Get()
+        {
+            return _context.Usages.Include(p => p.Person).Include(d => d.Device);
+        }
+
+        public override Usage GetById(int id)
+        {
+            throw new InvalidOperationException("Za ovaj entitet nije podrzana metoda Update");
         }
 
         public override void Update(Usage entity)

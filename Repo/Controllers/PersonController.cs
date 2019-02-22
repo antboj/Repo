@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Repo.Dto.PersonDto;
 using Repo.Interfaces;
 using Repo.Models;
 
@@ -11,18 +13,20 @@ using Repo.Models;
 namespace Repo.Controllers
 {
     [Route("api/Person")]
-    public class PersonController : Controller
+    public class PersonController : BaseController<Person, PersonDtoGet, PersonDtoPost, PersonDtoPut>
     {
-        private readonly IPerson _person;
+        private readonly IPerson _repository;
         private readonly IUnitOfWork _unitOfWork;
-        
-        
-        public PersonController(IPerson person, IUnitOfWork unitOfWork)
-        {
-            _person = person;
-            _unitOfWork = unitOfWork;
-        }
+        private readonly IMapper _mapper;
 
+
+        public PersonController(IPerson repository, IUnitOfWork unitOfWork, IMapper mapper) : base(repository, unitOfWork, mapper)
+        {
+            _repository = repository;
+            _unitOfWork = unitOfWork;
+            _mapper = mapper;
+        }
+        /*
         // GET: api/<controller>
         [HttpGet]
         public IActionResult Get()
@@ -71,5 +75,6 @@ namespace Repo.Controllers
             _unitOfWork.Save();
             return Ok();
         }
+        */
     }
 }

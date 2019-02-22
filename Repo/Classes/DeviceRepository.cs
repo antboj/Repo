@@ -9,23 +9,24 @@ namespace Repo.Classes
 {
     public class DeviceRepository : Repository<Device>, IDevice
     {
-        private readonly RepoContext context;
+        private readonly RepoContext _context;
 
         public DeviceRepository(RepoContext context) : base(context)
         {
-            this.context = context;
+            _context = context;
         }
 
 
         public void UseDevice(int pId, int dId)
         {
-            var foundDevice = context.Devices.Find(dId);
-            var isCurrentlyUsed = context.Usages.Any(x => x.DeviceId == dId && x.UsedTo == null);
+            var foundDevice = _context.Devices.Find(dId);
+            var isCurrentlyUsed = _context.Usages.Any(x => x.DeviceId == dId && x.UsedTo == null);
 
             if (foundDevice != null && !isCurrentlyUsed)
+
             {
                 foundDevice.PersonId = pId;
-                context.SaveChanges();
+                _context.SaveChanges();
 
                 var newUsageRecord = new Usage
                 {
@@ -34,14 +35,14 @@ namespace Repo.Classes
                     UsedFrom = DateTime.Now
                 };
 
-                context.Usages.Add(newUsageRecord);
-                context.SaveChanges();
+                _context.Usages.Add(newUsageRecord);
+                _context.SaveChanges();
             }
         }
 
         public void ChangeDeviceUser(int pId, int dId)
         {
-            var foundDevice = context.Devices.Find(dId);
+            var foundDevice = _context.Devices.Find(dId);
 
             if (foundDevice == null || foundDevice.PersonId == pId)
             {
@@ -49,14 +50,14 @@ namespace Repo.Classes
             }
 
             foundDevice.PersonId = pId;
-            context.SaveChanges();
+            _context.SaveChanges();
 
-            var usageRecord = context.Usages.FirstOrDefault(u => u.DeviceId == dId && u.UsedTo == null);
+            var usageRecord = _context.Usages.FirstOrDefault(u => u.DeviceId == dId && u.UsedTo == null);
 
             if (usageRecord != null)
             {
                 usageRecord.UsedTo = DateTime.Now;
-                context.SaveChanges();
+                _context.SaveChanges();
             }
 
             var newUsageRecord = new Usage
@@ -66,8 +67,8 @@ namespace Repo.Classes
                 UsedFrom = DateTime.Now
             };
 
-            context.Usages.Add(newUsageRecord);
-            context.SaveChanges();
+            _context.Usages.Add(newUsageRecord);
+            _context.SaveChanges();
         }
     }
 }

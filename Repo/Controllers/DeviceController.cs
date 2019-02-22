@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Repo.Classes;
+using Repo.Dto.DeviceDto;
 using Repo.Interfaces;
 using Repo.Models;
 
@@ -12,15 +14,17 @@ using Repo.Models;
 namespace Repo.Controllers
 {
     [Route("api/Device")]
-    public class DeviceController : BaseController<Device>
+    public class DeviceController : BaseController<Device, DeviceDtoGet, DeviceDtoPost, DeviceDtoPut>
     {
         private readonly IDevice _repository;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IMapper _mapper;
 
-        public DeviceController(IDevice repository, IUnitOfWork unitOfWork) : base(repository, unitOfWork)
+        public DeviceController(IDevice repository, IUnitOfWork unitOfWork, IMapper mapper) : base(repository, unitOfWork, mapper)
         {
             _unitOfWork = unitOfWork;
             _repository = repository;
+            _mapper = mapper;
         }
         /*
         // GET: api/<controller>
@@ -56,12 +60,12 @@ namespace Repo.Controllers
             _unitOfWork.Save();
             return Ok();
         }
-
+        */
         // PUT api/<controller>/5
         [HttpPut("UseDevice/{personId}/{deviceId}")]
         public IActionResult UseDevice(int personId, int deviceId)
         {
-            _device.UseDevice(personId, deviceId);
+            _repository.UseDevice(personId, deviceId);
             _unitOfWork.Save();
             return Ok();
         }
@@ -70,11 +74,11 @@ namespace Repo.Controllers
         [HttpPut("ChangeDeviceUser/{personId}/{deviceId}")]
         public IActionResult ChangeDeviceUser(int personId, int deviceId)
         {
-            _device.ChangeDeviceUser(personId, deviceId);
+            _repository.ChangeDeviceUser(personId, deviceId);
             _unitOfWork.Save();
             return Ok();
         }
-
+        /*
         // DELETE api/<controller>/5
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
@@ -82,6 +86,7 @@ namespace Repo.Controllers
             _device.Remove(id);
             _unitOfWork.Save();
             return Ok();
-        }*/
+        }
+        */
     }
 }

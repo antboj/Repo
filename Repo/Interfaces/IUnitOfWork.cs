@@ -7,8 +7,9 @@ namespace Repo.Interfaces
 {
     public interface IUnitOfWork
     {
-        //IOffice Office { get; }
-        //IPerson Person { get; }
         void Save();
+        //void Begin();
+        //void Commit();
+        //void Rollback();
     }
 }
