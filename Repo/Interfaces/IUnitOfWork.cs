@@ -8,8 +8,8 @@ namespace Repo.Interfaces
     public interface IUnitOfWork
     {
         void Save();
-        //void Begin();
-        //void Commit();
-        //void Rollback();
+        void Start();
+        void Commit();
+        void Dispose();
     }
 }

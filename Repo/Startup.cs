@@ -35,11 +35,14 @@ namespace Repo
         {
             // AutoMapper
             services.AddAutoMapper();
-            services.AddMvc();
+
+            services.AddMvc(options =>
+                options.Filters.Add(typeof(UnitOfWorkFilter) 
+            )).SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             // Database
             services.AddDbContext<RepoContext>(opts => opts.UseSqlServer(Configuration["ConnectionString:RepoDB"]));
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            //services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             // Repository
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));

@@ -21,11 +21,11 @@ namespace Repo.Classes
             _context.Persons.Add(entity);
             _context.SaveChanges();
 
-            var lastPerson = _context.Persons.Last();
-            var lastPersonOffice = lastPerson.OfficeId;
-            var officeName = _context.Offices.FirstOrDefault(o => o.Id == lastPersonOffice);
-            var personList = officeName.Persons;
-            personList.Add(lastPerson);
+            //var lastPerson = _context.Persons.Last();
+            //var lastPersonOffice = lastPerson.OfficeId;
+            //var officeName = _context.Offices.FirstOrDefault(o => o.Id == lastPersonOffice);
+            //var personList = officeName.Persons;
+            //personList.Add(lastPerson);
         }
 
         //public override void Update(Person entity)

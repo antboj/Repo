@@ -20,55 +20,65 @@ namespace Repo.Classes
         public void UseDevice(int pId, int dId)
         {
             var foundDevice = _context.Devices.Find(dId);
-            var isCurrentlyUsed = _context.Usages.Any(x => x.DeviceId == dId && x.UsedTo == null);
+            //var isCurrentlyUsed = _context.Usages.Any(x => x.DeviceId == dId && x.UsedTo == null);
 
-            if (foundDevice != null && !isCurrentlyUsed)
+            //if (!isCurrentlyUsed)
 
+            //{
+            if (foundDevice == null)
             {
+                throw new CustomException("Osoba ne postoji");
+            }
+
                 foundDevice.PersonId = pId;
                 _context.SaveChanges();
 
-                var newUsageRecord = new Usage
-                {
-                    PersonId = pId,
-                    DeviceId = dId,
-                    UsedFrom = DateTime.Now
-                };
+                //var newUsageRecord = new Usage
+                //{
+                //    PersonId = pId,
+                //    DeviceId = dId,
+                //    UsedFrom = DateTime.Now
+                //};
 
-                _context.Usages.Add(newUsageRecord);
-                _context.SaveChanges();
-            }
+                //_context.Usages.Add(newUsageRecord);
+                //_context.SaveChanges();
+            //}
         }
 
         public void ChangeDeviceUser(int pId, int dId)
         {
             var foundDevice = _context.Devices.Find(dId);
 
-            if (foundDevice == null || foundDevice.PersonId == pId)
+            if (foundDevice == null)
             {
-                return;
+                throw new CustomException("Uredjaj ne postoji");
+            }
+
+            if (foundDevice.PersonId == pId)
+            {
+             throw   new  CustomException("Korisnik vec koristi trazeni uredjaj");
             }
 
             foundDevice.PersonId = pId;
             _context.SaveChanges();
 
-            var usageRecord = _context.Usages.FirstOrDefault(u => u.DeviceId == dId && u.UsedTo == null);
+            //var usageRecord = _context.Usages.FirstOrDefault(u => u.DeviceId == dId && u.UsedTo == null);
 
-            if (usageRecord != null)
-            {
-                usageRecord.UsedTo = DateTime.Now;
-                _context.SaveChanges();
-            }
+            //if (usageRecord != null)
+            //{
+            //    usageRecord.UsedTo = DateTime.Now;
+            //    _context.SaveChanges();
+            //}
 
-            var newUsageRecord = new Usage
-            {
-                PersonId = pId,
-                DeviceId = dId,
-                UsedFrom = DateTime.Now
-            };
+            //var newUsageRecord = new Usage
+            //{
+            //    PersonId = pId,
+            //    DeviceId = dId,
+            //    UsedFrom = DateTime.Now
+            //};
 
-            _context.Usages.Add(newUsageRecord);
-            _context.SaveChanges();
+            //_context.Usages.Add(newUsageRecord);
+            //_context.SaveChanges();
         }
     }
 }

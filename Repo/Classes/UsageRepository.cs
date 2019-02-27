@@ -39,6 +39,37 @@ namespace Repo.Classes
                 });
         }
 
+        public bool IsCurrentlyUsed(int id)
+        {
+            var isCurrentlyUsed = _context.Usages.Any(x => x.DeviceId == id && x.UsedTo == null);
+
+            return isCurrentlyUsed;
+        }
+
+        public void EndUsing(int id)
+        {
+            var usageRecord = _context.Usages.FirstOrDefault(u => u.DeviceId == id && u.UsedTo == null);
+
+            if (usageRecord != null)
+            {
+                usageRecord.UsedTo = DateTime.Now;
+                _context.SaveChanges();
+            }
+        }
+
+        public void AddUsage(int dId, int pId)
+        {
+            var usage = new Usage
+            {
+                PersonId = pId,
+                DeviceId = dId,
+                UsedFrom = DateTime.Now
+            };
+
+            _context.Usages.Add(usage);
+            _context.SaveChanges();
+        }
+
         public override IEnumerable<Usage> Get()
         {
             return _context.Usages.Include(p => p.Person).Include(d => d.Device);
@@ -57,6 +88,7 @@ namespace Repo.Classes
         public override void Add(Usage entity)
         {
             throw new InvalidOperationException("Za ovaj entitet nije podrzana metoda Add");
+            
         }
 
         public override void Remove(int id)
