@@ -33,16 +33,18 @@ namespace Repo
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddMvc(option =>
+            {
+                option.Filters.Add(typeof(CustomException));
+                option.Filters.Add(typeof(UnitOfWorkFilter));
+                option.Filters.Add(typeof(ResultFilter));
+            }).SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+
             // AutoMapper
             services.AddAutoMapper();
 
-            services.AddMvc(options =>
-                options.Filters.Add(typeof(UnitOfWorkFilter) 
-            )).SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
-
             // Database
             services.AddDbContext<RepoContext>(opts => opts.UseSqlServer(Configuration["ConnectionString:RepoDB"]));
-            //services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             // Repository
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));

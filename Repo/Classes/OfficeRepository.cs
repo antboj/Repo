@@ -19,7 +19,13 @@ namespace Repo.Classes
 
         public IQueryable GetByOffice(string name)
         {
-            return _context.Offices.Where(o => o.Description == name).Include(p => p.Persons);
+            var office =  _context.Offices.Where(o => o.Description == name).Include(p => p.Persons);
+            if (!office.Any())
+            {
+                throw new MyException("Not Found");
+            }
+
+            return office;
         }
     }
 }

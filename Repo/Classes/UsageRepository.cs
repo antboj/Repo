@@ -67,7 +67,7 @@ namespace Repo.Classes
             };
 
             _context.Usages.Add(usage);
-            _context.SaveChanges();
+            //_context.SaveChanges();
         }
 
         public override IEnumerable<Usage> Get()

@@ -30,6 +30,7 @@ namespace Repo.Classes
             catch (Exception e)
             {
                 success = false;
+                throw;
             }
             finally
             {

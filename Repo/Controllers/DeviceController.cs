@@ -29,41 +29,6 @@ namespace Repo.Controllers
             _usage = usage;
 
         }
-        /*
-        // GET: api/<controller>
-        [HttpGet]
-        public IActionResult Get()
-        {
-            return Ok(_device.Get());
-        }
-
-        // GET api/<controller>/5
-        [HttpGet("GetById/{id}")]
-        public IActionResult GetById(int id)
-        {
-            var foundDevice = _device.GetById(id);
-            return Ok(foundDevice);
-        }
-
-        // POST api/<controller>
-        [HttpPost]
-        public IActionResult Post([FromBody]Device entity)
-        {
-            _device.Add(entity);
-            _unitOfWork.Save();
-            return Ok();
-        }
-
-        // PUT api/<controller>/5
-        [HttpPut("{id}")]
-        public IActionResult Put(int id, [FromBody]Device entity)
-        {
-            var found = _device.GetById(id);
-            found.Name = entity.Name;
-            _unitOfWork.Save();
-            return Ok();
-        }
-        */
         // PUT api/<controller>/5
         [HttpPut("UseDevice/{personId}/{deviceId}")]
 
@@ -71,31 +36,13 @@ namespace Repo.Controllers
         {
             //_unitOfWork.Start();
             var isCurrentlyUsed = _usage.IsCurrentlyUsed(deviceId);
-
-            try
-            {
-                if (isCurrentlyUsed)
-                {
-                    throw new CustomException("Uredjaj se koristi");
-                }
-
-                _repository.UseDevice(personId, deviceId);
-                _usage.AddUsage(deviceId, personId);
-                //_unitOfWork.Save();
-                //_unitOfWork.Commit();
-
-                return Ok();
-                //_unitOfWork.Dispose();
-            }
-            catch (CustomException e)
-            {
-                return BadRequest(e.Message);
-            }
-
-            return NotFound();
-            //_repository.UseDevice(personId, deviceId);
-            //_unitOfWork.Save();
-            //return Ok();
+            
+                    //throw new CustomException("Uredjaj se koristi");
+                    _repository.UseDevice(personId, deviceId);
+                    _usage.AddUsage(deviceId, personId);
+                    //_unitOfWork.Save();
+                    //_unitOfWork.Commit();
+                    return Ok("Success");
         }
 
         // PUT api/<controller>/5
@@ -103,38 +50,28 @@ namespace Repo.Controllers
         public IActionResult ChangeDeviceUser(int personId, int deviceId)
         {
             //_unitOfWork.Start();
-            if (personId != 0 && deviceId != 0)
-            {
-                try
-                {
-                    _repository.ChangeDeviceUser(personId, deviceId);
+            //if (personId != 0 || deviceId != 0)
+            //{
+                //try
+                //{
+                _repository.ChangeDeviceUser(personId, deviceId);
                     _usage.EndUsing(deviceId);
                     _usage.AddUsage(deviceId, personId);
                     //_unitOfWork.Save();
                     //_unitOfWork.Commit();
-                    return Ok();
-                }
-                catch (CustomException e)
-                {
-                    return BadRequest(e.Message);
-                }
-            }
+                    return Ok("Success");
+                //}
+                //catch (Exception)
+                //{
+                //    return BadRequest();
+                //}
+            //}
             //_unitOfWork.Dispose();
-            return NotFound();
+            //return NotFound();
 
             //_repository.ChangeDeviceUser(personId, deviceId);
             //_unitOfWork.Save();
             //return Ok();
         }
-        /*
-        // DELETE api/<controller>/5
-        [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
-        {
-            _device.Remove(id);
-            _unitOfWork.Save();
-            return Ok();
-        }
-        */
     }
 }

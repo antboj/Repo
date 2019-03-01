@@ -23,26 +23,18 @@ namespace Repo.Classes
             //var isCurrentlyUsed = _context.Usages.Any(x => x.DeviceId == dId && x.UsedTo == null);
 
             //if (!isCurrentlyUsed)
-
-            //{
             if (foundDevice == null)
             {
-                throw new CustomException("Osoba ne postoji");
+                throw new MyException("Uredjaj ne postoji");
             }
 
+            if (foundDevice.PersonId == pId && foundDevice.Id == dId)
+            {
+                throw new MyException("Korisnik vec koristi trazeni uredjaj");
+            }
+            
                 foundDevice.PersonId = pId;
                 _context.SaveChanges();
-
-                //var newUsageRecord = new Usage
-                //{
-                //    PersonId = pId,
-                //    DeviceId = dId,
-                //    UsedFrom = DateTime.Now
-                //};
-
-                //_context.Usages.Add(newUsageRecord);
-                //_context.SaveChanges();
-            //}
         }
 
         public void ChangeDeviceUser(int pId, int dId)
@@ -51,34 +43,16 @@ namespace Repo.Classes
 
             if (foundDevice == null)
             {
-                throw new CustomException("Uredjaj ne postoji");
+                throw new MyException("Uredjaj ne postoji");
             }
 
-            if (foundDevice.PersonId == pId)
+            if (foundDevice.PersonId == pId && foundDevice.Id == dId)
             {
-             throw   new  CustomException("Korisnik vec koristi trazeni uredjaj");
+                throw new MyException("Korisnik vec koristi trazeni uredjaj");
             }
 
             foundDevice.PersonId = pId;
             _context.SaveChanges();
-
-            //var usageRecord = _context.Usages.FirstOrDefault(u => u.DeviceId == dId && u.UsedTo == null);
-
-            //if (usageRecord != null)
-            //{
-            //    usageRecord.UsedTo = DateTime.Now;
-            //    _context.SaveChanges();
-            //}
-
-            //var newUsageRecord = new Usage
-            //{
-            //    PersonId = pId,
-            //    DeviceId = dId,
-            //    UsedFrom = DateTime.Now
-            //};
-
-            //_context.Usages.Add(newUsageRecord);
-            //_context.SaveChanges();
         }
     }
 }

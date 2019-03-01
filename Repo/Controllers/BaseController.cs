@@ -61,67 +61,26 @@ namespace Repo.Controllers
         [HttpPost]
         public IActionResult Post(TDtoPost input)
         {
-            //_unitOfWork.Start();
-            try
-            {
-                var otp = _mapper.Map<TEntity>(input);
-
-                _repository.Add(otp);
-                //_unitOfWork.Save();
-                //_unitOfWork.Commit();
-                return Ok();
-            }
-            catch (Exception)
-            {
-                return BadRequest();
-            }
-
+            var otp = _mapper.Map<TEntity>(input);
+            _repository.Add(otp);
+            return Ok("Success");
         }
 
         // PUT api/<controller>/5
         [HttpPut("{id}")]
         public IActionResult Put(int id, TDtoPut input)
         {
-            //_unitOfWork.Start();
-            try
-            {
-                var entity = _repository.GetById(id);
-                //_repository.Update(entity);
-                _mapper.Map(input, entity);
-                //_unitOfWork.Save();
-                //_unitOfWork.Commit();
-                //_unitOfWork.Dispose();
-                return Ok();
-
-            }
-            catch (Exception)
-            {
-                return BadRequest();
-            }
+            var entity = _repository.GetById(id);
+            _mapper.Map(input, entity);
+            return Ok("Success");
         }
 
         // DELETE api/<controller>/5
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
-            //_unitOfWork.Start();
-            if (id != 0)
-            {
-                try
-                {
-                    _repository.Remove(id);
-                    //_unitOfWork.Save();
-                    //_unitOfWork.Commit();
-                    //_unitOfWork.Dispose();
-                    return Ok();
-                }
-                catch (Exception)
-                {
-                    return BadRequest();
-                }
-            }
-
-            return NotFound();
+            _repository.Remove(id);
+            return Ok("Success");
         }
     }
 }

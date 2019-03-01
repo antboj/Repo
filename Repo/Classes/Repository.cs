@@ -18,12 +18,24 @@ namespace Repo.Classes
 
         public virtual TEntity GetById(int id)
         {
-            return _context.Set<TEntity>().Find(id);
+            var entity = _context.Set<TEntity>().Find(id);
+            if (entity == null)
+            {
+                throw new Exception("Not found");
+            }
+
+            return entity;
         }
 
         public virtual IEnumerable<TEntity> Get()
         {
-            return _context.Set<TEntity>().ToList();
+            var entities = _context.Set<TEntity>().ToList();
+            if (entities == null)
+            {
+                throw new Exception("Not Found");
+            }
+
+            return entities;
         }
 
         public virtual void Add(TEntity entity)
@@ -39,7 +51,11 @@ namespace Repo.Classes
         public virtual void Remove(int id)
         {
             var type = _context.Set<TEntity>().Find(id);
-            _context.Remove(type);
+            if (type == null)
+            {
+                throw new MyException("Not Found");
+            }
+            _context.Set<TEntity>().Remove(type);
         }
     }
 }
