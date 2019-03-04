@@ -6,7 +6,7 @@ using Repo.Models;
 
 namespace Repo.Interfaces
 {
-    public interface IPerson : IRepository<Person>
+    public interface IPersonRepository : IRepository<Person, int>
     {
     }
 }

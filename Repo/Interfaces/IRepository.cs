@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 
 namespace Repo.Interfaces
 {
-    public interface IRepository<TEntity> where TEntity : class
+    public interface IRepository<TEntity, IdType> where TEntity : class
     {
-        TEntity GetById(int id);
+        TEntity GetById(IdType id);
 
         IEnumerable<TEntity> Get();
 
@@ -15,6 +15,6 @@ namespace Repo.Interfaces
 
         void Update(TEntity entity);
 
-        void Remove(int id);
+        void Remove(IdType id);
     }
 }

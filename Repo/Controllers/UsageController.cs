@@ -34,17 +34,6 @@ namespace Repo.Controllers
             return Ok(otp);
         }
         
-        //// GET api/<controller>/5
-        //[HttpGet("GetById/{personId}")]
-        //public IActionResult GetById(int personId)
-        //{
-        //    var data = _repository.GetById(personId);
-
-        //    var otp = _mapper.Map<UsageDtoGet>(data);
-
-        //    return Ok(otp);
-        //}
-        
         // GET api/values/5
         [HttpGet("AllByDevice/{deviceId}")]
         public IActionResult AllByDevice(int deviceId)

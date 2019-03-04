@@ -8,7 +8,7 @@ using Repo.Models;
 
 namespace Repo.Classes
 {
-    public class OfficeRepository : Repository<Office>, IOffice
+    public class OfficeRepository : Repository<Office, int>, IOfficeRepository
     {
         private readonly RepoContext _context;
 
@@ -26,6 +26,13 @@ namespace Repo.Classes
             }
 
             return office;
+        }
+
+        public void Unos(Office input)
+        {
+            _context.Add(input);
+            //_context.SaveChanges();
+            //throw new MyException("nije sacuvano");
         }
     }
 }

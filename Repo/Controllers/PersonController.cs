@@ -13,14 +13,14 @@ using Repo.Models;
 namespace Repo.Controllers
 {
     [Route("api/Person")]
-    public class PersonController : BaseController<Person, PersonDtoGet, PersonDtoPost, PersonDtoPut>
+    public class PersonController : BaseController<Person, PersonDtoGet, PersonDtoPost, PersonDtoPut, int>
     {
-        private readonly IPerson _repository;
+        private readonly IPersonRepository _repository;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
 
-        public PersonController(IPerson repository, IUnitOfWork unitOfWork, IMapper mapper) : base(repository, unitOfWork, mapper)
+        public PersonController(IPersonRepository repository, IUnitOfWork unitOfWork, IMapper mapper) : base(repository, unitOfWork, mapper)
         {
             _repository = repository;
             _unitOfWork = unitOfWork;

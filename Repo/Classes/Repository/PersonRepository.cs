@@ -7,7 +7,7 @@ using Repo.Models;
 
 namespace Repo.Classes
 {
-    public class PersonRepository : Repository<Person>, IPerson
+    public class PersonRepository : Repository<Person, int>, IPersonRepository
     {
         private readonly RepoContext _context;
 

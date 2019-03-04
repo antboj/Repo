@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Transactions;
+using Microsoft.EntityFrameworkCore.Storage;
 using Repo.Interfaces;
 using Repo.Models;
 
@@ -11,11 +12,16 @@ namespace Repo.Classes
     public class UnitOfWork : IUnitOfWork, IDisposable
     {
         private readonly RepoContext _context;
-        private TransactionScope transaction;
+        private IDbContextTransaction transaction;
 
         public UnitOfWork(RepoContext context)
         {
             _context = context;
+        }
+        public void Start()
+        {
+            //transaction = new TransactionScope(TransactionScopeOption.RequiresNew);
+            this.transaction = _context.Database.BeginTransaction();
         }
 
         public void Save()
@@ -23,14 +29,9 @@ namespace Repo.Classes
             _context.SaveChanges();
         }
 
-        public void Start()
-        {
-            this.transaction = new TransactionScope();
-        }
-
         public void Commit()
         {
-            this.transaction.Complete();
+            transaction.Commit();
         }
 
         public void Dispose()

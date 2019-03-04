@@ -13,13 +13,13 @@ using Repo.Models;
 namespace Repo.Controllers
 {
     [Route("api/Office")]
-    public class OfficeController : BaseController<Office, OfficeDtoGet, OfficeDtoPost, OfficeDtoPut>
+    public class OfficeController : BaseController<Office, OfficeDtoGet, OfficeDtoPost, OfficeDtoPut, int>
     {
-        private readonly IOffice _repository;
+        private readonly IOfficeRepository _repository;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
-        public OfficeController(IOffice repository, IUnitOfWork unitOfWork, IMapper mapper) : base(repository, unitOfWork, mapper)
+        public OfficeController(IOfficeRepository repository, IUnitOfWork unitOfWork, IMapper mapper) : base(repository, unitOfWork, mapper)
         {
             _repository = repository;
             _unitOfWork = unitOfWork;
@@ -33,6 +33,13 @@ namespace Repo.Controllers
 
             var otp = _mapper.Map<IEnumerable<GetByOfficeDto>>(data);
                 return Ok(otp);
+        }
+
+        [HttpPost("Unos")]
+        public IActionResult Unos(Office input)
+        {
+            _repository.Unos(input);
+            return Ok();
         }
     }
 }

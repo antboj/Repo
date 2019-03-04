@@ -9,7 +9,7 @@ using Repo.Models;
 
 namespace Repo.Classes
 {
-    public class UsageRepository : Repository<Usage>, IUsageRepository
+    public class UsageRepository : Repository<Usage, int>, IUsageRepository
     {
         private readonly RepoContext _context;
 
@@ -67,7 +67,7 @@ namespace Repo.Classes
             };
 
             _context.Usages.Add(usage);
-            //_context.SaveChanges();
+            _context.SaveChanges();
         }
 
         public override IEnumerable<Usage> Get()

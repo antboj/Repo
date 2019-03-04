@@ -6,8 +6,9 @@ using Repo.Models;
 
 namespace Repo.Interfaces
 {
-    public interface IOffice : IRepository<Office>
+    public interface IDeviceRepository : IRepository<Device, int>
     {
-        IQueryable GetByOffice(string name);
+        void UseDevice(int pId, int dId);
+        void ChangeDeviceUser(int pId, int dId);
     }
 }

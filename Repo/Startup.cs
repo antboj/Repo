@@ -35,7 +35,7 @@ namespace Repo
         {
             services.AddMvc(option =>
             {
-                option.Filters.Add(typeof(CustomException));
+                option.Filters.Add(typeof(CustomExceptionFilter));
                 option.Filters.Add(typeof(UnitOfWorkFilter));
                 option.Filters.Add(typeof(ResultFilter));
             }).SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
@@ -47,10 +47,10 @@ namespace Repo
             services.AddDbContext<RepoContext>(opts => opts.UseSqlServer(Configuration["ConnectionString:RepoDB"]));
 
             // Repository
-            services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
-            services.AddScoped<IOffice, OfficeRepository>();
-            services.AddScoped<IPerson, PersonRepository>();
-            services.AddScoped<IDevice, DeviceRepository>();
+            services.AddScoped(typeof(IRepository<,>), typeof(Repository<,>));
+            services.AddScoped<IOfficeRepository, OfficeRepository>();
+            services.AddScoped<IPersonRepository, PersonRepository>();
+            services.AddScoped<IDeviceRepository, DeviceRepository>();
             services.AddScoped<IUsageRepository, UsageRepository>();
 
             // UnitOfWork

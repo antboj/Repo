@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace Repo.Classes
 {
-    public class CustomException : IExceptionFilter
+    public class CustomExceptionFilter : IExceptionFilter
     {
         public void OnException(ExceptionContext context)
         {

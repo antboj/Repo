@@ -7,7 +7,7 @@ using Repo.Models;
 
 namespace Repo.Classes
 {
-    public class Repository<TEntity> : IRepository<TEntity> where TEntity : class
+    public class Repository<TEntity, IdType> : IRepository<TEntity, IdType> where TEntity : class
     {
         private readonly RepoContext _context;
 
@@ -16,13 +16,9 @@ namespace Repo.Classes
             _context = context;
         }
 
-        public virtual TEntity GetById(int id)
+        public virtual TEntity GetById(IdType id)
         {
             var entity = _context.Set<TEntity>().Find(id);
-            if (entity == null)
-            {
-                throw new Exception("Not found");
-            }
 
             return entity;
         }
@@ -48,7 +44,7 @@ namespace Repo.Classes
             _context.Set<TEntity>().Update(entity);
         }
 
-        public virtual void Remove(int id)
+        public virtual void Remove(IdType id)
         {
             var type = _context.Set<TEntity>().Find(id);
             if (type == null)

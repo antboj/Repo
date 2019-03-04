@@ -7,7 +7,7 @@ using Repo.Models;
 
 namespace Repo.Classes
 {
-    public class DeviceRepository : Repository<Device>, IDevice
+    public class DeviceRepository : Repository<Device, int>, IDeviceRepository
     {
         private readonly RepoContext _context;
 
@@ -20,9 +20,6 @@ namespace Repo.Classes
         public void UseDevice(int pId, int dId)
         {
             var foundDevice = _context.Devices.Find(dId);
-            //var isCurrentlyUsed = _context.Usages.Any(x => x.DeviceId == dId && x.UsedTo == null);
-
-            //if (!isCurrentlyUsed)
             if (foundDevice == null)
             {
                 throw new MyException("Uredjaj ne postoji");
@@ -41,15 +38,15 @@ namespace Repo.Classes
         {
             var foundDevice = _context.Devices.Find(dId);
 
-            if (foundDevice == null)
-            {
-                throw new MyException("Uredjaj ne postoji");
-            }
+            //if (foundDevice == null)
+            //{
+            //    throw new MyException("Uredjaj ne postoji");
+            //}
 
-            if (foundDevice.PersonId == pId && foundDevice.Id == dId)
-            {
-                throw new MyException("Korisnik vec koristi trazeni uredjaj");
-            }
+            //if (foundDevice.PersonId == pId && foundDevice.Id == dId)
+            //{
+            //    throw new MyException("Korisnik vec koristi trazeni uredjaj");
+            //}
 
             foundDevice.PersonId = pId;
             _context.SaveChanges();

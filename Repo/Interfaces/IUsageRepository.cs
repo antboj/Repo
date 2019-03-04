@@ -7,7 +7,7 @@ using Repo.Models;
 
 namespace Repo.Interfaces
 {
-    public interface IUsageRepository : IRepository<Usage>
+    public interface IUsageRepository : IRepository<Usage, int>
     {
         IQueryable AllByDevice(int id);
         IQueryable AllByPerson(int id);

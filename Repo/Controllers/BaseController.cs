@@ -12,13 +12,13 @@ using Repo.Interfaces;
 namespace Repo.Controllers
 {
     [Route("api/[controller]")]
-    public class BaseController<TEntity, TDtoGet, TDtoPost, TDtoPut> : Controller where TEntity : class where TDtoGet : class where TDtoPost : class where TDtoPut : class
+    public class BaseController<TEntity, TDtoGet, TDtoPost, TDtoPut, IdType> : Controller where TEntity : class where TDtoGet : class where TDtoPost : class where TDtoPut : class
     {
-        private IRepository<TEntity> _repository;
+        private IRepository<TEntity, IdType> _repository;
         private IUnitOfWork _unitOfWork;
         private IMapper _mapper;
 
-        public BaseController(IRepository<TEntity> repository, IUnitOfWork unitOfWork, IMapper mapper)
+        public BaseController(IRepository<TEntity, IdType> repository, IUnitOfWork unitOfWork, IMapper mapper)
         {
             _repository = repository;
             _unitOfWork = unitOfWork;
@@ -38,12 +38,12 @@ namespace Repo.Controllers
                 return Ok(otp);
             }
 
-            return NotFound();
+            return NotFound("Nemaaaaa");
         }
 
         // GET api/<controller>/5
         [HttpGet("{id}")]
-        public IActionResult Get(int id)
+        public IActionResult Get(IdType id)
         {
             var data = _repository.GetById(id);
 
@@ -54,7 +54,7 @@ namespace Repo.Controllers
                 return Ok(otp);
             }
 
-            return NotFound();
+            return NotFound("Nemaaaaa");
         }
 
         // POST api/<controller>
@@ -68,7 +68,7 @@ namespace Repo.Controllers
 
         // PUT api/<controller>/5
         [HttpPut("{id}")]
-        public IActionResult Put(int id, TDtoPut input)
+        public IActionResult Put(IdType id, TDtoPut input)
         {
             var entity = _repository.GetById(id);
             _mapper.Map(input, entity);
@@ -77,7 +77,7 @@ namespace Repo.Controllers
 
         // DELETE api/<controller>/5
         [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
+        public IActionResult Delete(IdType id)
         {
             _repository.Remove(id);
             return Ok("Success");
