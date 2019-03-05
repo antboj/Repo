@@ -53,7 +53,7 @@ namespace Repo.Classes
             if (usageRecord != null)
             {
                 usageRecord.UsedTo = DateTime.Now;
-                _context.SaveChanges();
+                //_context.SaveChanges();
             }
         }
 
@@ -67,7 +67,7 @@ namespace Repo.Classes
             };
 
             _context.Usages.Add(usage);
-            _context.SaveChanges();
+           // _context.SaveChanges();
         }
 
         public override IEnumerable<Usage> Get()

@@ -34,21 +34,19 @@ namespace Repo.Controllers
 
         public IActionResult UseDevice(int personId, int deviceId)
         {
-            //_unitOfWork.Start();
-            var isCurrentlyUsed = _usage.IsCurrentlyUsed(deviceId);
-                    _repository.UseDevice(personId, deviceId);
-                    _usage.AddUsage(deviceId, personId);
-                    return Ok("Success");
+            _repository.UseDevice(personId, deviceId);
+            _usage.AddUsage(deviceId, personId);
+            return Ok("Success");
         }
 
         // PUT api/<controller>/5
         [HttpPut("ChangeDeviceUser/{personId}/{deviceId}")]
         public IActionResult ChangeDeviceUser(int personId, int deviceId)
         {
-                _repository.ChangeDeviceUser(personId, deviceId);
-                    _usage.EndUsing(deviceId);
-                    _usage.AddUsage(deviceId, personId);
-                    return Ok("Success");
+            _repository.ChangeDeviceUser(personId, deviceId);
+            _usage.EndUsing(deviceId);
+            _usage.AddUsage(deviceId, personId);
+            return Ok("Success");
         }
     }
 }

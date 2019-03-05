@@ -31,25 +31,25 @@ namespace Repo.Classes
             }
             
                 foundDevice.PersonId = pId;
-                _context.SaveChanges();
+                //_context.SaveChanges();
         }
 
         public void ChangeDeviceUser(int pId, int dId)
         {
             var foundDevice = _context.Devices.Find(dId);
 
-            //if (foundDevice == null)
-            //{
-            //    throw new MyException("Uredjaj ne postoji");
-            //}
+            if (foundDevice == null)
+            {
+                throw new MyException("Uredjaj ne postoji");
+            }
 
-            //if (foundDevice.PersonId == pId && foundDevice.Id == dId)
-            //{
-            //    throw new MyException("Korisnik vec koristi trazeni uredjaj");
-            //}
+            if (foundDevice.PersonId == pId && foundDevice.Id == dId)
+            {
+                throw new MyException("Korisnik vec koristi trazeni uredjaj");
+            }
 
             foundDevice.PersonId = pId;
-            _context.SaveChanges();
+            //_context.SaveChanges();
         }
     }
 }

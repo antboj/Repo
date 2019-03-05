@@ -12,7 +12,7 @@ using Repo.Interfaces;
 namespace Repo.Controllers
 {
     [Route("api/[controller]")]
-    public class BaseController<TEntity, TDtoGet, TDtoPost, TDtoPut, IdType> : Controller where TEntity : class where TDtoGet : class where TDtoPost : class where TDtoPut : class
+    public class BaseController<TEntity, TDtoGet, TDtoPost, TDtoPut, IdType> : ControllerBase where TEntity : class where TDtoGet : class where TDtoPost : class where TDtoPut : class
     {
         private IRepository<TEntity, IdType> _repository;
         private IUnitOfWork _unitOfWork;

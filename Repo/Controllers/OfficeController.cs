@@ -36,10 +36,15 @@ namespace Repo.Controllers
         }
 
         [HttpPost("Unos")]
-        public IActionResult Unos(Office input)
+        public IActionResult Unos([FromBody]OfficeDtoPost input)
         {
-            _repository.Unos(input);
-            return Ok();
+            if (ModelState.IsValid)
+            {
+                return Ok();
+            }
+
+            return BadRequest(string.Join(",",
+                ModelState.Values.SelectMany(v => v.Errors.Select(e => e.ErrorMessage))));
         }
     }
 }

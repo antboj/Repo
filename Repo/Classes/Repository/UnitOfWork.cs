@@ -20,7 +20,6 @@ namespace Repo.Classes
         }
         public void Start()
         {
-            //transaction = new TransactionScope(TransactionScopeOption.RequiresNew);
             this.transaction = _context.Database.BeginTransaction();
         }
 

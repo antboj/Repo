@@ -14,6 +14,11 @@ namespace Repo.Classes
         public void OnException(ExceptionContext context)
         {
             context.ExceptionHandled = true;
+
+            var o = context.Result as ObjectResult;
+
+
+
             var err = new Error
             {
                 Message = context.Exception.Message,
@@ -31,8 +36,7 @@ namespace Repo.Classes
             }
 
             var obj = new Response {Data = null, IsError = true, Error = err};
-
-            context.Result = new ObjectResult(obj);
+            context.Result = new ObjectResult(obj) { StatusCode = StatusCodes.Status500InternalServerError };
         }
     }
 }
