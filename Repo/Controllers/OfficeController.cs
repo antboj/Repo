@@ -31,6 +31,7 @@ namespace Repo.Controllers
         {
             var data = _repository.GetByOffice(officeName);
 
+
             var otp = _mapper.Map<IEnumerable<GetByOfficeDto>>(data);
                 return Ok(otp);
         }

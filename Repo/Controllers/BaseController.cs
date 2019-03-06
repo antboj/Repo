@@ -59,7 +59,7 @@ namespace Repo.Controllers
 
         // POST api/<controller>
         [HttpPost]
-        public IActionResult Post(TDtoPost input)
+        public IActionResult Post([FromBody]TDtoPost input)
         {
             var otp = _mapper.Map<TEntity>(input);
             _repository.Add(otp);
