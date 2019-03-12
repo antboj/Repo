@@ -4,11 +4,13 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Transactions;
 using Microsoft.EntityFrameworkCore.Storage;
+using Repo.Classes.Attributes;
 using Repo.Interfaces;
 using Repo.Models;
 
 namespace Repo.Classes
 {
+    [ScopedService]
     public class UnitOfWork : IUnitOfWork, IDisposable
     {
         private readonly RepoContext _context;

@@ -2,12 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Repo.Classes.Attributes;
 using Repo.Interfaces;
 using Repo.Models;
 
 namespace Repo.Classes
 {
-    public class Repository<TEntity, IdType> : IRepository<TEntity, IdType> where TEntity : class
+    [ScopedService]
+    public abstract class Repository<TEntity, IdType> : IRepository<TEntity, IdType> where TEntity : class
     {
         private readonly RepoContext _context;
 

@@ -40,6 +40,8 @@ namespace Repo
                 option.Filters.Add(typeof(ResultFilter));
             }).SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
+            
+
             // AutoMapper
             services.AddAutoMapper();
 
@@ -47,14 +49,16 @@ namespace Repo
             services.AddDbContext<RepoContext>(opts => opts.UseSqlServer(Configuration["ConnectionString:RepoDB"]));
 
             // Repository
-            services.AddScoped(typeof(IRepository<,>), typeof(Repository<,>));
+            //services.AddScoped(typeof(IRepository<,>), typeof(Repository<,>));
             services.AddScoped<IOfficeRepository, OfficeRepository>();
             services.AddScoped<IPersonRepository, PersonRepository>();
             services.AddScoped<IDeviceRepository, DeviceRepository>();
             services.AddScoped<IUsageRepository, UsageRepository>();
 
             // UnitOfWork
-            services.AddScoped<IUnitOfWork, UnitOfWork>();
+            //services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+            services.AddAndrej();
 
             // Swagger
             services.AddSwaggerGen(c =>
