@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Repo.Classes.Attributes;
 using Repo.Interfaces;
 using Repo.Models;
 
 namespace Repo.Classes
 {
+    //[Service]
     public class PersonRepository : Repository<Person, int>, IPersonRepository
     {
         private readonly RepoContext _context;
@@ -27,9 +29,5 @@ namespace Repo.Classes
             //var personList = officeName.Persons;
             //personList.Add(lastPerson);
         }
-
-        //public override void Update(Person entity)
-        //{
-        //}
     }
 }

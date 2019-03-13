@@ -50,15 +50,16 @@ namespace Repo
 
             // Repository
             //services.AddScoped(typeof(IRepository<,>), typeof(Repository<,>));
-            services.AddScoped<IOfficeRepository, OfficeRepository>();
-            services.AddScoped<IPersonRepository, PersonRepository>();
-            services.AddScoped<IDeviceRepository, DeviceRepository>();
-            services.AddScoped<IUsageRepository, UsageRepository>();
+            //services.AddScoped<IOfficeRepository, OfficeRepository>();
+            //services.AddScoped<IPersonRepository, PersonRepository>();
+            //services.AddScoped<IDeviceRepository, DeviceRepository>();
+            //services.AddScoped<IUsageRepository, UsageRepository>();
 
             // UnitOfWork
             //services.AddScoped<IUnitOfWork, UnitOfWork>();
 
-            services.AddAndrej();
+            // Service Register based on attributes
+            services.ServiceRegisterOnCustomAttribute();
 
             // Swagger
             services.AddSwaggerGen(c =>

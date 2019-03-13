@@ -8,11 +8,11 @@ namespace Repo.Classes.Attributes
     [AttributeUsage(AttributeTargets.Class)]
     public class ServiceAttribute : Attribute
     {
-        private string Value;
+        public ServiceEnumAttributeValues Value { get; }
 
-        public ServiceAttribute(string value)
+        public ServiceAttribute(ServiceEnumAttributeValues value = ServiceEnumAttributeValues.Transient)
         {
-            this.Value = value;
+            Value = value;
         }
     }
 }

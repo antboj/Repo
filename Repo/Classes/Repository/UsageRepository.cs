@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Repo.Classes.Attributes;
 using Repo.Dto.UsageDto;
 using Repo.Interfaces;
 using Repo.Models;
 
 namespace Repo.Classes
 {
+    //[Service]
     public class UsageRepository : Repository<Usage, int>, IUsageRepository
     {
         private readonly RepoContext _context;

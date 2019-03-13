@@ -8,8 +8,8 @@ using Repo.Models;
 
 namespace Repo.Classes
 {
-    [ScopedService]
-    public abstract class Repository<TEntity, IdType> : IRepository<TEntity, IdType> where TEntity : class
+    [Service]
+    public class Repository<TEntity, IdType> : IRepository<TEntity, IdType> where TEntity : class
     {
         private readonly RepoContext _context;
 

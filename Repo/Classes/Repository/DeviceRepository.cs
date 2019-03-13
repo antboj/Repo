@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Repo.Classes.Attributes;
 using Repo.Interfaces;
 using Repo.Models;
 
 namespace Repo.Classes
 {
+    //[Service]
     public class DeviceRepository : Repository<Device, int>, IDeviceRepository
     {
         private readonly RepoContext _context;
