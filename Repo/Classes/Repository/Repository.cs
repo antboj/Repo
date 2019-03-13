@@ -9,7 +9,7 @@ using Repo.Models;
 namespace Repo.Classes
 {
     [Service]
-    public class Repository<TEntity, IdType> : IRepository<TEntity, IdType> where TEntity : class
+    public abstract class Repository<TEntity, IdType> : IRepository<TEntity, IdType> where TEntity : class
     {
         private readonly RepoContext _context;
 

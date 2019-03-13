@@ -74,11 +74,9 @@ namespace Repo.Classes
 
                         Type[] ij = currInterface.GetGenericArguments();
 
+                        //service.AddScoped(currInterface, currentClass);
 
-
-                        
-
-                        service.AddScoped(currInterface, currentClass);
+                        // Code from home VS
                     }
                 }
 
