@@ -78,7 +78,7 @@ namespace Repo.Classes
 
                         
 
-                        service.AddScoped(currInterface, currentClass);
+                        //service.AddScoped(currInterface, currentClass);
                     }
                 }
 
