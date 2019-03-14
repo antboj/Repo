@@ -10,7 +10,7 @@ using Repo.Models;
 
 namespace Repo.Classes
 {
-    [Service]
+    [Service(ServiceEnumAttributeValues.Scoped)]
     public class UnitOfWork : IUnitOfWork, IDisposable
     {
         private readonly RepoContext _context;

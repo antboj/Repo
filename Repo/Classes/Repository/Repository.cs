@@ -9,7 +9,7 @@ using Repo.Models;
 namespace Repo.Classes
 {
     [Service]
-    public abstract class Repository<TEntity, IdType> : IRepository<TEntity, IdType> where TEntity : class
+    public class Repository<TEntity, IdType> : IRepository<TEntity, IdType> where TEntity : class
     {
         private readonly RepoContext _context;
 
@@ -51,7 +51,7 @@ namespace Repo.Classes
             var type = _context.Set<TEntity>().Find(id);
             if (type == null)
             {
-                throw new MyException("Not Found");
+                throw new Exception("Not Found");
             }
             _context.Set<TEntity>().Remove(type);
         }

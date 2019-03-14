@@ -45,10 +45,6 @@ namespace Repo.Classes
 
         public static void ServiceRegisterOnCustomAttribute(this IServiceCollection service)
         {
-            //var types = from t in Assembly.GetExecutingAssembly().GetTypes()
-            //    where t.GetCustomAttributes<ServiceAttribute>(true).Any()
-            //    select t;
-
             var allTypes = Assembly.GetExecutingAssembly().GetTypes()
                 .Where(e => e.GetCustomAttributes<ServiceAttribute>(true).Any());
 
@@ -56,43 +52,55 @@ namespace Repo.Classes
             {
                 var attrValue = type.GetCustomAttribute<ServiceAttribute>().Value;
 
-                if (type.IsAbstract)
-                {
-                    continue;
-                }
+                //if (type.IsAbstract)
+                //{
+                //    continue;
+                //}
+               // Type currentInterface = type.GetInterfaces().FirstOrDefault(x => !x.IsGenericType);
 
-                Type currentInterface = type.GetInterfaces().FirstOrDefault(x => !x.IsGenericType);
+
                 Type currentClass = type;
-
                 Type[] allInterfaces = type.GetInterfaces();
 
-                foreach (var currInterface in allInterfaces)
+                foreach (var currentInterface in allInterfaces)
                 {
-                    if (currInterface.IsGenericType)
+                    switch (attrValue)
                     {
-                        Type[] genericParams = currInterface.GetGenericArguments();
+                        case ServiceEnumAttributeValues.Scoped:
+                            if (currentInterface.IsGenericType && currentClass.IsGenericType)
+                            {
+                                var gTi = currentInterface.GetGenericTypeDefinition();
+                                service.AddScoped(gTi, currentClass);
+                            }
+                            else
+                            {
+                                service.AddScoped(currentInterface, currentClass);
 
-                        Type[] ij = currInterface.GetGenericArguments();
-
-                        //now
-
-                        
-
-                        //service.AddScoped(currInterface, currentClass);
+                            }
+                            break;
+                        case ServiceEnumAttributeValues.Transient:
+                            if (currentInterface.IsGenericType && currentClass.IsGenericType)
+                            {
+                                var gTi = currentInterface.GetGenericTypeDefinition();
+                                service.AddScoped(gTi, currentClass);
+                            }
+                            else
+                            {
+                                service.AddTransient(currentInterface, currentClass);
+                            }
+                            break;
+                        case ServiceEnumAttributeValues.Singleton:
+                            if (currentInterface.IsGenericType && currentClass.IsGenericType)
+                            {
+                                var gTi = currentInterface.GetGenericTypeDefinition();
+                                service.AddScoped(gTi, currentClass);
+                            }
+                            else
+                            {
+                                service.AddSingleton(currentInterface, currentClass);
+                            }
+                            break;
                     }
-                }
-
-                switch (attrValue)
-                {
-                    case ServiceEnumAttributeValues.Scoped:
-                        service.AddScoped(currentInterface, currentClass);
-                        break;
-                    case ServiceEnumAttributeValues.Transient:
-                        service.AddTransient(currentInterface, currentClass);
-                        break;
-                    case ServiceEnumAttributeValues.Singleton:
-                        service.AddSingleton(currentInterface, currentClass);
-                        break;
                 }
             }
         }

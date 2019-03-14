@@ -18,14 +18,25 @@ namespace Repo.Classes
 
         public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
         {
-            _unitOfWork.Start();
+            var isStarted = false;
             var success = false;
+
+            if (context.HttpContext.Request.Method != "GET")
+            {
+                _unitOfWork.Start();
+                //success = true;
+                isStarted = true;
+            }
+            //var success = false;
             try
             {
                 await next();
 
-                _unitOfWork.Save();
-                success = true;
+                if (isStarted)
+                {
+                    _unitOfWork.Save();
+                    success = true;
+                }
             }
             catch (Exception)
             {
@@ -34,14 +45,17 @@ namespace Repo.Classes
             }
             finally
             {
-                if (success)
+                if (isStarted)
                 {
-                    _unitOfWork.Commit();
-                    _unitOfWork.Dispose();
-                }
-                else
-                {
-                    _unitOfWork.Dispose();
+                    if (success)
+                    {
+                        _unitOfWork.Commit();
+                        _unitOfWork.Dispose();
+                    }
+                    else
+                    {
+                        _unitOfWork.Dispose();
+                    }
                 }
             }
         }

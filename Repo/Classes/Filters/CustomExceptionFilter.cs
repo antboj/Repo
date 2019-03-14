@@ -16,9 +16,7 @@ namespace Repo.Classes
             context.ExceptionHandled = true;
 
             var o = context.Result as ObjectResult;
-
-
-
+            
             var err = new Error
             {
                 Message = context.Exception.Message,
