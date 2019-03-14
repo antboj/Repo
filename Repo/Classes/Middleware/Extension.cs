@@ -72,11 +72,11 @@ namespace Repo.Classes
                     {
                         Type[] genericParams = currInterface.GetGenericArguments();
 
-                        Type[] ij = currInterface.GetGenericArguments();
+                        
 
-                        //service.AddScoped(currInterface, currentClass);
+                        
 
-                        // Code from home VS
+                        service.AddScoped(currInterface, currentClass);
                     }
                 }
 
