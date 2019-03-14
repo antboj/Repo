@@ -71,10 +71,7 @@ namespace Repo.Classes
                     if (currInterface.IsGenericType)
                     {
                         Type[] genericParams = currInterface.GetGenericArguments();
-
-                        
-
-                        
+                        //iefioefoiwoif
 
                         service.AddScoped(currInterface, currentClass);
                     }
