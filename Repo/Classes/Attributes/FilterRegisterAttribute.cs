@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 namespace Repo.Classes.Attributes
 {
     [AttributeUsage(AttributeTargets.Class)]
-    public class TransientServiceAttribute : Attribute
+    public class FilterRegisterAttribute : Attribute
     {
     }
 }

@@ -8,9 +8,11 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Repo.Classes.Attributes;
 
 namespace Repo.Classes
 {
+    [FilterRegister]
     public class ResultFilter : IResultFilter
     {
         public void OnResultExecuting(ResultExecutingContext context)
@@ -29,16 +31,6 @@ namespace Repo.Classes
                     context.Result = new ObjectResult(obj);
                 }
 
-                //if (o.StatusCode >= StatusCodes.Status300MultipleChoices && o.StatusCode < StatusCodes.Status400BadRequest)
-                //{
-                //    var obj = new Response();
-                //    obj.Data = o.Value;
-                //    obj.IsError = false;
-                //    obj.Error = null;
-
-                //    context.Result = new ObjectResult(obj);
-                //}
-
                 if (o.StatusCode >= StatusCodes.Status400BadRequest && o.StatusCode < StatusCodes.Status500InternalServerError)
                 {
                     var obj = new Response();
@@ -53,16 +45,6 @@ namespace Repo.Classes
 
                     context.Result = new ObjectResult(obj) {StatusCode = o.StatusCode};
                 }
-
-                //if (o.StatusCode >= StatusCodes.Status500InternalServerError)
-                //{
-                //    var obj = new Response();
-                //    obj.Data = null;
-                //    obj.IsError = true;
-                //    obj.Error.Message = "500";
-
-                //    context.Result = new ObjectResult(obj);
-                //}
             }
         }
 

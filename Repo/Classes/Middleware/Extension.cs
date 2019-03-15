@@ -17,32 +17,6 @@ namespace Repo.Classes
             app.UseMiddleware<ExceptionMiddleware>();
         }
 
-        //public static void AddAndrej(this IServiceCollection service)
-        //{
-        //    var types = from t in Assembly.GetExecutingAssembly().GetTypes()
-        //                where t.GetCustomAttributes<ScopedServiceAttribute>().Any()
-        //                select t;
-
-        //    foreach (var t in types)
-        //    {
-        //        if (t.IsAbstract)
-        //        {
-        //            continue;
-        //        }
-
-        //        Type interF = t.GetInterfaces().FirstOrDefault();
-        //        Type classN = t;
-
-        //        // service.AddScoped(interF, classN);
-        //        var method = typeof(ServiceCollectionServiceExtensions)
-        //            .GetMethods(BindingFlags.Public | BindingFlags.Static).FirstOrDefault(x =>
-        //                x.Name == "AddScoped" && x.IsGenericMethod && x.IsStatic && x.IsPublic &&
-        //                x.GetGenericArguments().Length == 2);
-        //        var genericMethod = method.MakeGenericMethod(new[] {interF, classN});
-        //        genericMethod.Invoke(null, new[] {service});
-        //    }
-        //}
-
         public static void ServiceRegisterOnCustomAttribute(this IServiceCollection service)
         {
             var allTypes = Assembly.GetExecutingAssembly().GetTypes()
@@ -51,14 +25,7 @@ namespace Repo.Classes
             foreach (var type in allTypes)
             {
                 var attrValue = type.GetCustomAttribute<ServiceAttribute>().Value;
-
-                //if (type.IsAbstract)
-                //{
-                //    continue;
-                //}
-               // Type currentInterface = type.GetInterfaces().FirstOrDefault(x => !x.IsGenericType);
-
-
+                
                 Type currentClass = type;
                 Type[] allInterfaces = type.GetInterfaces();
 
@@ -75,7 +42,6 @@ namespace Repo.Classes
                             else
                             {
                                 service.AddScoped(currentInterface, currentClass);
-
                             }
                             break;
                         case ServiceEnumAttributeValues.Transient:
@@ -103,6 +69,21 @@ namespace Repo.Classes
                     }
                 }
             }
+        }
+
+        public static void FilterRegisterExtension(this IServiceCollection service)
+        {
+            var allFilters = Assembly.GetExecutingAssembly().GetTypes()
+                .Where(e => e.GetCustomAttributes<FilterRegisterAttribute>(true).Any());
+
+            service.AddMvc(options =>
+            {
+                foreach (var currentFilter in allFilters)
+                {
+                    options.Filters.Add(currentFilter);
+                }
+            });
+
         }
     }
 }

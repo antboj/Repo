@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Filters;
+using Repo.Classes.Attributes;
 using Repo.Interfaces;
 
 namespace Repo.Classes
 {
+    [FilterRegister]
     public class UnitOfWorkFilter : IAsyncActionFilter
     {
         private readonly IUnitOfWork _unitOfWork;
@@ -24,13 +26,15 @@ namespace Repo.Classes
             if (context.HttpContext.Request.Method != "GET")
             {
                 _unitOfWork.Start();
-                //success = true;
                 isStarted = true;
             }
-            //var success = false;
             try
             {
-                await next();
+                var actionResult = await next();
+                if (actionResult.Exception != null)
+                {
+                    throw actionResult.Exception;
+                }
 
                 if (isStarted)
                 {

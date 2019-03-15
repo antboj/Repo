@@ -6,9 +6,11 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using Repo.Classes.Attributes;
 
 namespace Repo.Classes
 {
+    [FilterRegister]
     public class CustomExceptionFilter : IExceptionFilter
     {
         public void OnException(ExceptionContext context)
