@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Repo.Classes.Attributes;
+using Repo.Classes.Expressions;
 using Repo.Dto.UsageDto;
 using Repo.Interfaces;
 using Repo.Models;
@@ -41,6 +42,23 @@ namespace Repo.Classes
                 });
         }
 
+        // EXPRESSION SAMPLE //
+        public IQueryable Queryinfo(string op, string prop, string src, string ob)
+        {
+            //return _context.Usages.Where(x => x.Id == id)
+            //    .OrderBy(x => x.UsedFrom)
+            //    .ThenBy(x => x.Device.Name)
+            //    .Skip(1)
+            //    .Take(3);
+
+            var qu = new QueryInfo();
+
+            var whereExFilter = qu.GetWherExpression<Usage>(op, prop, src);
+            var orderByFilter = qu.GetOrderByExpression<Usage>(ob);
+            return _context.Usages.Where(whereExFilter).OrderBy(orderByFilter);
+        }
+        // --------------------------//
+        
         public bool IsCurrentlyUsed(int id)
         {
             var isCurrentlyUsed = _context.Usages.Any(x => x.DeviceId == id && x.UsedTo == null);

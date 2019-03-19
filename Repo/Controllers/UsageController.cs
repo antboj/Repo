@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Repo.Classes.Expressions;
 using Repo.Dto.UsageDto;
 using Repo.Interfaces;
 
@@ -68,6 +69,14 @@ namespace Repo.Controllers
             var otp = _mapper.Map<IEnumerable<TimeUsedByPersonDtoGet>>(data);
 
             return Ok(otp);
+        }
+
+        // GET api/values/5
+        [HttpGet("GetQueryInfo")]
+        public IActionResult GetQueryInfo(string op, string prop, string src, string ob)
+        {
+            var data = _repository.Queryinfo(op, prop, src, ob);
+            return Ok(data);
         }
     }
 }

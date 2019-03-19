@@ -26,14 +26,25 @@ namespace Repo.Controllers
             _mapper = mapper;
         }
         // GET api/values/5
-        [HttpGet("GetByOffice/{officeName}")]
-        public IActionResult GetByOffice(string officeName)
+        [HttpGet("GetByOffice/{officeName}/{prop}")]
+        public IActionResult GetByOffice(string officeName, string prop)
         {
-            var data = _repository.GetByOffice(officeName);
+            var data = _repository.GetByOffice(officeName, prop);
 
 
             var otp = _mapper.Map<IEnumerable<GetByOfficeDto>>(data);
                 return Ok(otp);
+        }
+
+        // GET api/values/5
+        [HttpGet("GetOffice/{officeName}")]
+        public IActionResult GetByOffice(string officeName)
+        {
+            var data = _repository.GetOffice(officeName);
+
+
+            var otp = _mapper.Map<IEnumerable<GetByOfficeDto>>(data);
+            return Ok(otp);
         }
 
         [HttpPost("Unos")]

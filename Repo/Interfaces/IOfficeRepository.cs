@@ -8,7 +8,8 @@ namespace Repo.Interfaces
 {
     public interface IOfficeRepository : IRepository<Office, int>
     {
-        IQueryable GetByOffice(string name);
+        IQueryable GetByOffice(string name, string prop);
+        IQueryable GetOffice(string name);
         void Unos(Office input);
     }
 }
