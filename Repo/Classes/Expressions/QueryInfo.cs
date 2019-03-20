@@ -14,8 +14,7 @@ namespace Repo.Classes.Expressions
         public List<SortInfo> Sorters { get; set; } = new List<SortInfo>();
         public FilterInfo Filter { get; set; }
         
-        // Where Ekspresija
-        public BinaryExpression b<TEntity>(string operatorValue,
+        public BinaryExpression GetBinaryExpression<TEntity>(string operatorValue,
             string propertyName, string searchValue)
         {
             //  x =>
@@ -26,7 +25,7 @@ namespace Repo.Classes.Expressions
             var convertedTypeValue = Convert.ChangeType(searchValue, type);
             var constantEx = Expression.Constant(convertedTypeValue);
 
-            // x.Property == nesto
+            // x.Property == const
             BinaryExpression binaryEx;
             switch (convertedTypeValue)
             {
@@ -40,20 +39,24 @@ namespace Repo.Classes.Expressions
                     throw new ArgumentException();
             }
 
-            Expression<Func<TEntity, bool>> trueExp = x => true;
-            Expression result = trueExp.Body;
+            //Expression<Func<TEntity, bool>> trueExp = x => true;
+            //Expression result = trueExp.Body;
 
             // for ...
-            result = Expression.AndAlso(result, binaryEx); // &&
+            //result = Expression.AndAlso(result, binaryEx); // &&
 
             //bE = Expression.And(bE, binaryEx);
 
-            return (BinaryExpression) result;
+            return binaryEx;
 
             //return Expression.Lambda<Func<TEntity, bool>>(result, parameterEx);
         }
 
-        
+        public Expression<Func<TEntity, bool>> GetWhere<TEntity>(Expression binary, ParameterExpression parameterEx)
+        {
+            return Expression.Lambda<Func<TEntity, bool>>(binary, parameterEx);
+        }
+
 
         // Binarna int ekspresija za Where
         private static BinaryExpression GetBinaryExpressionForInt(string operatorValue, MemberExpression propertyEx, ConstantExpression constantEx)

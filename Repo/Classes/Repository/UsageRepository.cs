@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Repo.Classes.Attributes;
@@ -45,44 +46,62 @@ namespace Repo.Classes
         // -------EXPRESSION SAMPLE------- //
         public IQueryable QueryInfo(QueryInfo input)
         {
-            // string op, string prop, string src, string ob
-
-            //return _context.Usages.Where(x => x.Id == id)
-            //    .OrderBy(x => x.UsedFrom)
-            //    .ThenBy(x => x.Device.Name)
-            //    .Skip(1)
-            //    .Take(3);
             var obj = new QueryInfo();
-            
 
             var query = _context.Usages.AsQueryable();
 
             var rules = input.Filter.Rules;
             var condition = input.Filter.Condition;
 
+            Expression result;
+            if (condition == "and")
+            {
+                Expression<Func<Usage, bool>> trueExp = x => true;
+                result = trueExp.Body;
+            }
+            else
+            {
+                Expression<Func<Usage, bool>> falseExp = x => false;
+                result = falseExp.Body;
+            }
+
             foreach (var rule in rules)
             {
                 var property = rule.Property;
                 var binOperator = rule.Operator;
                 var value = rule.Value;
+                var binaryExpression = obj.GetBinaryExpression<Usage>(binOperator, property, value);
+
+                switch (condition)
+                {
+                    case "and":
+                        result = Expression.AndAlso(result, binaryExpression);
+                        break;
+                    case "or":
+                        result = Expression.OrElse(result, binaryExpression);
+                        break;;
+                }
             }
+            ParameterExpression parameterEx = Expression.Parameter(typeof(Usage), "x");
+            var whereEx = obj.GetWhere<Usage>(result, parameterEx);
 
-            
+            return query.Where(whereEx);
 
-            var op = input.Filter.Rules[0].Operator;
-            var prop = input.Filter.Rules[0].Property;
-            var src = input.Filter.Rules[0].Value;
-            var ob = input.Sorters[0].Property;
 
-            var qu = new QueryInfo();
+            //var op = input.Filter.Rules[0].Operator;
+            //var prop = input.Filter.Rules[0].Property;
+            //var src = input.Filter.Rules[0].Value;
+            //var ob = input.Sorters[0].Property;
+
+            //var qu = new QueryInfo();
 
             //var whereExFilter = qu.GetWhereExpression<Usage>(op, prop, src);
 
-            var orderByFilter = qu.GetOrderByExpression<Usage>(ob);
+            //var orderByFilter = qu.GetOrderByExpression<Usage>(ob);
 
-            query = query.OrderBy(x => x.UsedFrom);
+            //query = query.OrderBy(x => x.UsedFrom);
 
-            query = ((IOrderedQueryable<Usage>) query).ThenBy(x => x.Id);
+            //query = ((IOrderedQueryable<Usage>) query).ThenBy(x => x.Id);
 
 
             //return query.Where(whereExFilter).OrderBy(orderByFilter);
