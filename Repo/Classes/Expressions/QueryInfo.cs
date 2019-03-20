@@ -63,11 +63,11 @@ namespace Repo.Classes.Expressions
         {
             switch (operatorValue)
             {
-                case "GT":
+                case "gt":
                     return Expression.GreaterThan(propertyEx, constantEx);
-                case "LT":
+                case "lt":
                     return Expression.LessThan(propertyEx, constantEx);
-                case "EQ":
+                case "eq":
                     return Expression.Equal(propertyEx, constantEx);
                 default:
                     throw new InvalidOperationException();
@@ -82,7 +82,7 @@ namespace Repo.Classes.Expressions
 
             switch (operatorValue)
             {
-                case "EQ":
+                case "eq":
                     return Expression.Equal(propertyEx, constantEx);
                 default:
                     throw new InvalidOperationException();
@@ -98,12 +98,5 @@ namespace Repo.Classes.Expressions
 
             return Expression.Lambda<Func<TEntity, object>>(convertEx, parameterEx);
         }
-
-        //public Expression<Func<TEntity, TKey>> GetOrderByDescendingExpression<TEntity, TKey>(string propertyName)
-        //{
-        //    ParameterExpression parameterEx = Expression.Parameter(typeof(TEntity), "x");
-        //    var propertyEx = Expression.Property(parameterEx, propertyName);
-        //    return Expression.Lambda<Func<TEntity, TKey>>(propertyEx, parameterEx);
-        //}
     }
 }

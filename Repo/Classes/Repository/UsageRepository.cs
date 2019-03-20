@@ -51,6 +51,7 @@ namespace Repo.Classes
             var query = _context.Usages.AsQueryable();
 
             var rules = input.Filter.Rules;
+            var sorters = input.Sorters;
             var condition = input.Filter.Condition;
 
             Expression result;
@@ -85,9 +86,46 @@ namespace Repo.Classes
             ParameterExpression parameterEx = Expression.Parameter(typeof(Usage), "x");
             var whereEx = obj.GetWhere<Usage>(result, parameterEx);
 
-            return query.Where(whereEx);
+            query = query.Where(whereEx);
 
+            bool sortedFirst = false;
+            foreach (var sort in sorters)
+            {
+                var sortProperty = sort.Property;
+                var sortDirection = sort.SortDirection;
+                
+                switch (sortDirection)
+                {
+                    case "asc":
+                        if (!sortedFirst)
+                        {
+                            query = query.OrderBy(obj.GetOrderByExpression<Usage>(sortProperty));
+                            sortedFirst = true;
+                        }
+                        else
+                        {
+                            query = ((IOrderedQueryable<Usage>)query).ThenBy(obj.GetOrderByExpression<Usage>(sortProperty));
+                        }
+                        break;
+                    case "desc":
+                        if (!sortedFirst)
+                        {
+                            query = query.OrderByDescending(obj.GetOrderByExpression<Usage>(sortProperty));
+                            sortedFirst = true;
+                        }
+                        else
+                        {
+                            query = ((IOrderedQueryable<Usage>)query).ThenByDescending(obj.GetOrderByExpression<Usage>(sortProperty));
+                        }
+                        break;
+                }
+            }
 
+            var skipNum = input.Skip;
+            var takeNum = input.Take;
+            query = query.Skip(skipNum).Take(takeNum);
+            return query;
+            
             //var op = input.Filter.Rules[0].Operator;
             //var prop = input.Filter.Rules[0].Property;
             //var src = input.Filter.Rules[0].Value;
