@@ -72,10 +72,10 @@ namespace Repo.Controllers
         }
 
         // GET api/values/5
-        [HttpGet("GetQueryInfo")]
-        public IActionResult GetQueryInfo(string op, string prop, string src, string ob)
+        [HttpPost("GetQueryInfo")]
+        public IActionResult GetQueryInfo([FromBody] QueryInfo input)
         {
-            var data = _repository.Queryinfo(op, prop, src, ob);
+            var data = _repository.QueryInfo(input);
             return Ok(data);
         }
     }

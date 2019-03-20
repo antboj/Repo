@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Repo.Classes.Expressions;
 using Repo.Models;
 
 namespace Repo.Interfaces
@@ -12,7 +13,7 @@ namespace Repo.Interfaces
         IQueryable AllByDevice(int id);
         IQueryable AllByPerson(int id);
         IQueryable TimeUsedByPerson(int id);
-        IQueryable Queryinfo(string op, string prop, string src, string ob);
+        IQueryable QueryInfo(QueryInfo input);
         bool IsCurrentlyUsed(int id);
         void AddUsage(int dId, int pId);
         void EndUsing(int id);

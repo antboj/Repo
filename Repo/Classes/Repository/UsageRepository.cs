@@ -42,22 +42,52 @@ namespace Repo.Classes
                 });
         }
 
-        // EXPRESSION SAMPLE //
-        public IQueryable Queryinfo(string op, string prop, string src, string ob)
+        // -------EXPRESSION SAMPLE------- //
+        public IQueryable QueryInfo(QueryInfo input)
         {
+            // string op, string prop, string src, string ob
+
             //return _context.Usages.Where(x => x.Id == id)
             //    .OrderBy(x => x.UsedFrom)
             //    .ThenBy(x => x.Device.Name)
             //    .Skip(1)
             //    .Take(3);
+            var obj = new QueryInfo();
+            
+
+            var query = _context.Usages.AsQueryable();
+
+            var rules = input.Filter.Rules;
+            var condition = input.Filter.Condition;
+
+            foreach (var rule in rules)
+            {
+                var property = rule.Property;
+                var binOperator = rule.Operator;
+                var value = rule.Value;
+            }
+
+            
+
+            var op = input.Filter.Rules[0].Operator;
+            var prop = input.Filter.Rules[0].Property;
+            var src = input.Filter.Rules[0].Value;
+            var ob = input.Sorters[0].Property;
 
             var qu = new QueryInfo();
 
-            var whereExFilter = qu.GetWherExpression<Usage>(op, prop, src);
+            //var whereExFilter = qu.GetWhereExpression<Usage>(op, prop, src);
+
             var orderByFilter = qu.GetOrderByExpression<Usage>(ob);
-            return _context.Usages.Where(whereExFilter).OrderBy(orderByFilter);
+
+            query = query.OrderBy(x => x.UsedFrom);
+
+            query = ((IOrderedQueryable<Usage>) query).ThenBy(x => x.Id);
+
+
+            //return query.Where(whereExFilter).OrderBy(orderByFilter);
         }
-        // --------------------------//
+        // -------------------------------- //
         
         public bool IsCurrentlyUsed(int id)
         {

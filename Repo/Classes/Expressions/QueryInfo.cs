@@ -13,28 +13,21 @@ namespace Repo.Classes.Expressions
         public int Take { get; set; }
         public List<SortInfo> Sorters { get; set; } = new List<SortInfo>();
         public FilterInfo Filter { get; set; }
-
+        
         // Where Ekspresija
-        public Expression<Func<TEntity, bool>> GetWherExpression<TEntity>(string operatorValue,
+        public BinaryExpression b<TEntity>(string operatorValue,
             string propertyName, string searchValue)
         {
-            // Parametar : x =>
+            //  x =>
             ParameterExpression parameterEx = Expression.Parameter(typeof(TEntity), "x");
-
-            // Property po kojem se pretrazuje : x.Property
+            // x.Property
             var propertyEx = Expression.Property(parameterEx, propertyName);
-
-            // Tip propertija po kojem se pretrazuje
             var type = propertyEx.Type;
-
-            // Konvertovanje
             var convertedTypeValue = Convert.ChangeType(searchValue, type);
-
-            // Konstanta, vrijednost po kojoj se poredi
             var constantEx = Expression.Constant(convertedTypeValue);
 
+            // x.Property == nesto
             BinaryExpression binaryEx;
-
             switch (convertedTypeValue)
             {
                 case string _:
@@ -47,8 +40,20 @@ namespace Repo.Classes.Expressions
                     throw new ArgumentException();
             }
 
-            return Expression.Lambda<Func<TEntity, bool>>(binaryEx, parameterEx);
+            Expression<Func<TEntity, bool>> trueExp = x => true;
+            Expression result = trueExp.Body;
+
+            // for ...
+            result = Expression.AndAlso(result, binaryEx); // &&
+
+            //bE = Expression.And(bE, binaryEx);
+
+            return (BinaryExpression) result;
+
+            //return Expression.Lambda<Func<TEntity, bool>>(result, parameterEx);
         }
+
+        
 
         // Binarna int ekspresija za Where
         private static BinaryExpression GetBinaryExpressionForInt(string operatorValue, MemberExpression propertyEx, ConstantExpression constantEx)
