@@ -10,10 +10,10 @@ namespace Repo.Interfaces
 {
     public interface IUsageRepository : IRepository<Usage, int>
     {
-        IQueryable AllByDevice(int id);
-        IQueryable AllByPerson(int id);
-        IQueryable TimeUsedByPerson(int id);
-        IQueryable QueryInfo(QueryInfo input);
+        IQueryable<Usage> AllByDevice(int id);
+        IQueryable<Usage> AllByPerson(int id);
+        IQueryable<Usage> TimeUsedByPerson(int id);
+        IQueryable<Usage> QueryInfo(QueryInfo input);
         bool IsCurrentlyUsed(int id);
         void AddUsage(int dId, int pId);
         void EndUsing(int id);

@@ -14,11 +14,9 @@ namespace Repo.Classes.Expressions
         public List<SortInfo> Sorters { get; set; } = new List<SortInfo>();
         public FilterInfo Filter { get; set; }
         
-        public BinaryExpression GetBinaryExpression<TEntity>(string operatorValue,
+        public BinaryExpression GetBinaryExpression(ParameterExpression parameterEx, string operatorValue,
             string propertyName, string searchValue)
         {
-            //  x =>
-            ParameterExpression parameterEx = Expression.Parameter(typeof(TEntity), "x");
             // x.Property
             var propertyEx = Expression.Property(parameterEx, propertyName);
             var type = propertyEx.Type;
@@ -41,15 +39,11 @@ namespace Repo.Classes.Expressions
 
             //Expression<Func<TEntity, bool>> trueExp = x => true;
             //Expression result = trueExp.Body;
-
             // for ...
             //result = Expression.AndAlso(result, binaryEx); // &&
-
             //bE = Expression.And(bE, binaryEx);
 
             return binaryEx;
-
-            //return Expression.Lambda<Func<TEntity, bool>>(result, parameterEx);
         }
 
         public Expression<Func<TEntity, bool>> GetWhere<TEntity>(Expression binary, ParameterExpression parameterEx)
@@ -58,7 +52,7 @@ namespace Repo.Classes.Expressions
         }
 
 
-        // Binarna int ekspresija za Where
+        // Binarna int ekspresija
         private static BinaryExpression GetBinaryExpressionForInt(string operatorValue, MemberExpression propertyEx, ConstantExpression constantEx)
         {
             switch (operatorValue)
@@ -74,7 +68,7 @@ namespace Repo.Classes.Expressions
             }
         }
 
-        // Binarna string ekspresija za Where
+        // Binarna string ekspresija
         private static BinaryExpression GetBinaryExpressionForString(string operatorValue, MemberExpression propertyEx, ConstantExpression constantEx)
         {
             //var trueExpression = Expression.Constant(true, typeof(bool));
@@ -93,8 +87,16 @@ namespace Repo.Classes.Expressions
         public Expression<Func<TEntity, object>> GetOrderByExpression<TEntity>(string propertyName)
         {
             ParameterExpression parameterEx = Expression.Parameter(typeof(TEntity), "x");
-            var propertyEx = Expression.Property(parameterEx, propertyName);
-            var convertEx = Expression.Convert(propertyEx, typeof(object));
+
+            Expression currentParameter = parameterEx;
+  
+            string[] allProperties = propertyName.Split(".");
+            foreach (string currentProperty in allProperties)
+            {
+                currentParameter = Expression.Property(currentParameter, currentProperty);
+            }
+            
+            var convertEx = Expression.Convert(currentParameter, typeof(object));
 
             return Expression.Lambda<Func<TEntity, object>>(convertEx, parameterEx);
         }

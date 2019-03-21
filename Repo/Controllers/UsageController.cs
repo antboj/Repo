@@ -34,7 +34,7 @@ namespace Repo.Controllers
 
             return Ok(otp);
         }
-        
+
         // GET api/values/5
         [HttpGet("AllByDevice/{deviceId}")]
         public IActionResult AllByDevice(int deviceId)
@@ -45,7 +45,7 @@ namespace Repo.Controllers
 
             return Ok(otp);
         }
-        
+
         // GET api/values/5
         [HttpGet("AllByPerson/{personId}")]
         public IActionResult AllByPerson(int personId)
@@ -55,7 +55,7 @@ namespace Repo.Controllers
 
             var otp = _mapper.Map<IEnumerable<UsageAllByPersonDtoGet>>(data);
 
-            
+
 
             return Ok(otp);
         }
@@ -76,7 +76,7 @@ namespace Repo.Controllers
         public IActionResult GetQueryInfo([FromBody] QueryInfo input)
         {
             var data = _repository.QueryInfo(input);
-            return Ok(data);
+            return Ok(data.ToList());
         }
     }
 }

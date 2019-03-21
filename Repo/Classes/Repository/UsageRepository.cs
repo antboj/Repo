@@ -22,29 +22,23 @@ namespace Repo.Classes
             _context = context;
         }
 
-        public IQueryable AllByDevice(int id)
+        public IQueryable<Usage> AllByDevice(int id)
         {
             return _context.Usages.Where(x => x.DeviceId == id).Include(p => p.Person).Include(d => d.Device);
         }
 
-        public IQueryable AllByPerson(int id)
+        public IQueryable<Usage> AllByPerson(int id)
         {
-            return _context.Usages.Where(d => d.PersonId == id).Include(p => p.Person).Include(d => d.Device).GroupBy(d => d.Device.Name).Select(x =>
-                 new { Device = x.Key, Usages = x.Select(y => new { UsedFrom = y.UsedFrom, UsedTo = y.UsedTo }).OrderBy(d => d.UsedFrom) });
+            return _context.Usages.Where(d => d.PersonId == id).Include(p => p.Person).Include(d => d.Device);
         }
 
-        public IQueryable TimeUsedByPerson(int id)
+        public IQueryable<Usage> TimeUsedByPerson(int id)
         {
-            return _context.Usages.Where(p => p.PersonId == id).GroupBy(x => x.Device.Name)
-                .Select(y => new
-                {
-                    Device = y.Key,
-                    TimeUsed = new TimeSpan(y.Sum(u => (u.UsedTo.Value != null ? u.UsedTo.Value.Ticks : DateTime.Now.Ticks) - u.UsedFrom.Ticks)).ToString(@"dd\.hh\:mm\:ss")
-                });
+            return _context.Usages.Where(p => p.PersonId == id);
         }
 
         // -------EXPRESSION SAMPLE------- //
-        public IQueryable QueryInfo(QueryInfo input)
+        public IQueryable<Usage> QueryInfo(QueryInfo input)
         {
             var obj = new QueryInfo();
 
@@ -53,7 +47,10 @@ namespace Repo.Classes
             var rules = input.Filter.Rules;
             var sorters = input.Sorters;
             var condition = input.Filter.Condition;
+            var skipNum = input.Skip;
+            var takeNum = input.Take > 0 ? input.Take : 1;
 
+            ParameterExpression parameterEx = Expression.Parameter(typeof(Usage), "x");
             Expression result;
             if (condition == "and")
             {
@@ -71,19 +68,21 @@ namespace Repo.Classes
                 var property = rule.Property;
                 var binOperator = rule.Operator;
                 var value = rule.Value;
-                var binaryExpression = obj.GetBinaryExpression<Usage>(binOperator, property, value);
+                var binaryExpression = obj.GetBinaryExpression(parameterEx, binOperator, property, value);
 
-                switch (condition)
+               switch (condition)
                 {
                     case "and":
                         result = Expression.AndAlso(result, binaryExpression);
                         break;
                     case "or":
                         result = Expression.OrElse(result, binaryExpression);
-                        break;;
+                        break;
+                    default:
+                        throw new InvalidOperationException();
                 }
             }
-            ParameterExpression parameterEx = Expression.Parameter(typeof(Usage), "x");
+
             var whereEx = obj.GetWhere<Usage>(result, parameterEx);
 
             query = query.Where(whereEx);
@@ -118,11 +117,11 @@ namespace Repo.Classes
                             query = ((IOrderedQueryable<Usage>)query).ThenByDescending(obj.GetOrderByExpression<Usage>(sortProperty));
                         }
                         break;
+                    default:
+                        throw new InvalidOperationException();
                 }
             }
-
-            var skipNum = input.Skip;
-            var takeNum = input.Take;
+            
             query = query.Skip(skipNum).Take(takeNum);
             return query;
             
