@@ -26,6 +26,10 @@ namespace Repo.MapperProfiles
             CreateMap<Usage, TimeUsedByPersonDtoGet>()
                 .ForMember(d => d.Device, s => s.MapFrom(x => x.Device.Name))
                 .ForMember(d => d.TimeUsed, s => s.MapFrom(x => x.UsedFrom));
+
+            CreateMap<Usage, UsageGetQueryInfoDtoGet>()
+                .ForMember(d => d.Device, s => s.MapFrom(x => x.Device.Name))
+                .ForMember(d => d.Person, s => s.MapFrom(x => x.Person.FirstName + " " + x.Person.LastName));
         }
     }
 }

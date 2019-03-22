@@ -27,14 +27,20 @@ namespace Repo.Classes
             return _context.Usages.Where(x => x.DeviceId == id).Include(p => p.Person).Include(d => d.Device);
         }
 
-        public IQueryable<Usage> AllByPerson(int id)
+        public IQueryable<UsageAllByPersonDtoGet> AllByPerson(int id)
         {
-            return _context.Usages.Where(d => d.PersonId == id).Include(p => p.Person).Include(d => d.Device);
+            return _context.Usages.Where(d => d.PersonId == id).GroupBy(d => d.Device.Name)
+                .Select(x => new UsageAllByPersonDtoGet { Device = x.Key, Usages = x.Select(y => new UsageTimeDtoGet { UsedFrom = y.UsedFrom, UsedTo = y.UsedTo }) });
         }
 
-        public IQueryable<Usage> TimeUsedByPerson(int id)
+        public IQueryable<TimeUsedByPersonDtoGet> TimeUsedByPerson(int id)
         {
-            return _context.Usages.Where(p => p.PersonId == id);
+            return _context.Usages.Where(p => p.PersonId == id).GroupBy(x => x.Device.Name)
+                .Select(y => new TimeUsedByPersonDtoGet
+                {
+                    Device = y.Key,
+                    TimeUsed = new TimeSpan(y.Sum(u => (u.UsedTo.Value != null ? u.UsedTo.Value.Ticks : DateTime.Now.Ticks) - u.UsedFrom.Ticks)).ToString(@"dd\.hh\:mm\:ss")
+                }); ;
         }
 
         // -------EXPRESSION SAMPLE------- //
@@ -42,7 +48,7 @@ namespace Repo.Classes
         {
             var obj = new QueryInfo();
 
-            var query = _context.Usages.AsQueryable();
+            var query = _context.Usages.Include(p => p.Person).Include(d => d.Device).AsQueryable();
 
             var rules = input.Filter.Rules;
             var sorters = input.Sorters;

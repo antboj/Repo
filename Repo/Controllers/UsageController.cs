@@ -76,7 +76,8 @@ namespace Repo.Controllers
         public IActionResult GetQueryInfo([FromBody] QueryInfo input)
         {
             var data = _repository.QueryInfo(input);
-            return Ok(data.ToList());
+            var otp = _mapper.Map<IEnumerable<UsageGetQueryInfoDtoGet>>(data);
+            return Ok(otp);
         }
     }
 }

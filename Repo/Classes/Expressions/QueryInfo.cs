@@ -17,8 +17,27 @@ namespace Repo.Classes.Expressions
         public BinaryExpression GetBinaryExpression(ParameterExpression parameterEx, string operatorValue,
             string propertyName, string searchValue)
         {
-            // x.Property
-            var propertyEx = Expression.Property(parameterEx, propertyName);
+
+            Expression propertyEx = parameterEx;
+            Expression currentParameter = parameterEx;
+            var currentType = parameterEx.Type;
+
+            string[] allProperties = propertyName.Split(".");
+            foreach (string currentProperty in allProperties)
+            {
+                // RIP
+                //propertyEx = Expression.Property(propertyEx, currentProperty);
+
+                if (!DoesPropertyExist(currentProperty, currentType))
+                {
+                    throw new Exception($"Property {propertyName} ne postoji u tipu {currentType.Name}");
+                }
+
+                currentParameter = Expression.Property(currentParameter, currentProperty);
+                currentType = currentParameter.Type;
+                propertyEx = Expression.Property(propertyEx, currentProperty);
+            }
+            
             var type = propertyEx.Type;
             var convertedTypeValue = Convert.ChangeType(searchValue, type);
             var constantEx = Expression.Constant(convertedTypeValue);
@@ -50,10 +69,10 @@ namespace Repo.Classes.Expressions
         {
             return Expression.Lambda<Func<TEntity, bool>>(binary, parameterEx);
         }
-
+        
 
         // Binarna int ekspresija
-        private static BinaryExpression GetBinaryExpressionForInt(string operatorValue, MemberExpression propertyEx, ConstantExpression constantEx)
+        private static BinaryExpression GetBinaryExpressionForInt(string operatorValue, Expression propertyEx, ConstantExpression constantEx)
         {
             switch (operatorValue)
             {
@@ -63,13 +82,17 @@ namespace Repo.Classes.Expressions
                     return Expression.LessThan(propertyEx, constantEx);
                 case "eq":
                     return Expression.Equal(propertyEx, constantEx);
+                case "loe":
+                    return Expression.LessThanOrEqual(propertyEx, constantEx);
+                case "goe":
+                    return Expression.GreaterThanOrEqual(propertyEx, constantEx);
                 default:
                     throw new InvalidOperationException();
             }
         }
 
         // Binarna string ekspresija
-        private static BinaryExpression GetBinaryExpressionForString(string operatorValue, MemberExpression propertyEx, ConstantExpression constantEx)
+        private static BinaryExpression GetBinaryExpressionForString(string operatorValue, Expression propertyEx, ConstantExpression constantEx)
         {
             //var trueExpression = Expression.Constant(true, typeof(bool));
             //BinaryExpression bin;
@@ -89,16 +112,37 @@ namespace Repo.Classes.Expressions
             ParameterExpression parameterEx = Expression.Parameter(typeof(TEntity), "x");
 
             Expression currentParameter = parameterEx;
-  
+
+            var currentType = parameterEx.Type;
+            
             string[] allProperties = propertyName.Split(".");
             foreach (string currentProperty in allProperties)
             {
+                if (!DoesPropertyExist(currentProperty, currentType))
+                {
+                    throw new Exception($"Property {propertyName} ne postoji u tipu {currentType.Name}");
+                }
+
                 currentParameter = Expression.Property(currentParameter, currentProperty);
+                currentType = currentParameter.Type;
             }
             
             var convertEx = Expression.Convert(currentParameter, typeof(object));
 
             return Expression.Lambda<Func<TEntity, object>>(convertEx, parameterEx);
+        }
+
+        private bool DoesPropertyExist(string currentProperty, Type currentType)
+        {
+            PropertyInfo[] allPropertiesInfo = currentType.GetProperties();
+            foreach (var curP in allPropertiesInfo)
+            {
+                if (curP.Name == currentProperty)
+                {
+                    return true;
+                }
+            }
+            return false;
         }
     }
 }
